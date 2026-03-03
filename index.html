@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Abhijith Damodaran — Salesforce Architect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --blue: #0070f3;
+      --blue-dark: #0050b3;
+      --blue-light: #e8f1ff;
+      --dark: #0a0f1e;
+      --dark2: #111827;
+      --gray: #6b7280;
+      --gray-light: #f3f4f6;
+      --white: #ffffff;
+      --accent: #00c4ff;
+      --green: #10b981;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--white);
+      color: #1f2937;
+      line-height: 1.6;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #e5e7eb;
+      z-index: 100;
+      padding: 0 2rem;
+      height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    nav .logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700; font-size: 1.1rem;
+      color: var(--dark);
+      text-decoration: none;
+    }
+    nav .logo span { color: var(--blue); }
+    nav ul { list-style: none; display: flex; gap: 2rem; }
+    nav ul a {
+      text-decoration: none; font-size: 0.875rem;
+      font-weight: 500; color: var(--gray);
+      transition: color 0.2s;
+    }
+    nav ul a:hover { color: var(--blue); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0a0f1e 0%, #0d1b3e 50%, #0a2454 100%);
+      display: flex; align-items: center;
+      padding: 100px 2rem 60px;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 70% 50%, rgba(0,112,243,0.2) 0%, transparent 60%),
+                  radial-gradient(ellipse at 20% 80%, rgba(0,196,255,0.1) 0%, transparent 50%);
+    }
+    .hero-grid {
+      position: absolute; inset: 0; opacity: 0.04;
+      background-image: linear-gradient(rgba(255,255,255,.3) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,.3) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .hero-inner {
+      max-width: 1100px; margin: 0 auto; width: 100%;
+      position: relative; z-index: 1;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(0,112,243,0.15);
+      border: 1px solid rgba(0,112,243,0.3);
+      border-radius: 100px;
+      padding: 6px 16px; margin-bottom: 24px;
+      font-size: 0.8rem; font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 0.05em; text-transform: uppercase;
+    }
+    .hero-badge span { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; }
+    .hero h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.8rem, 6vw, 5rem);
+      font-weight: 700; line-height: 1.08;
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+    .hero h1 .blue { color: var(--accent); }
+    .hero .subtitle {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: rgba(255,255,255,0.6);
+      max-width: 560px; margin-bottom: 40px;
+      font-weight: 300;
+    }
+    .hero-stats {
+      display: flex; gap: 40px; flex-wrap: wrap; margin-bottom: 48px;
+    }
+    .stat { }
+    .stat .num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.2rem; font-weight: 700;
+      color: var(--white); line-height: 1;
+    }
+    .stat .num span { color: var(--accent); }
+    .stat .label {
+      font-size: 0.8rem; color: rgba(255,255,255,0.45);
+      text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px;
+    }
+    .hero-cta { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn-primary {
+      padding: 14px 28px; border-radius: 8px;
+      background: var(--blue); color: white;
+      font-weight: 600; font-size: 0.9rem;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-primary:hover { background: var(--blue-dark); transform: translateY(-1px); }
+    .btn-outline {
+      padding: 14px 28px; border-radius: 8px;
+      background: transparent; color: rgba(255,255,255,0.8);
+      font-weight: 600; font-size: 0.9rem;
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.25);
+      transition: border-color 0.2s, color 0.2s;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── SECTIONS ── */
+    section { padding: 96px 2rem; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.75rem; font-weight: 600;
+      color: var(--blue); text-transform: uppercase;
+      letter-spacing: 0.1em; margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      font-weight: 700; color: var(--dark);
+      margin-bottom: 16px; line-height: 1.2;
+    }
+    .section-desc {
+      color: var(--gray); font-size: 1rem;
+      max-width: 560px; margin-bottom: 60px;
+    }
+
+    /* ── ABOUT ── */
+    #about { background: var(--gray-light); }
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 60px; align-items: start;
+    }
+    .about-text p {
+      color: #374151; line-height: 1.8;
+      margin-bottom: 16px; font-size: 1rem;
+    }
+    .about-cards { display: flex; flex-direction: column; gap: 16px; }
+    .about-card {
+      background: white; border-radius: 12px;
+      padding: 20px 24px;
+      border: 1px solid #e5e7eb;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .about-card .icon {
+      width: 44px; height: 44px; border-radius: 10px;
+      background: var(--blue-light);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; flex-shrink: 0;
+    }
+    .about-card h4 { font-weight: 600; font-size: 0.95rem; color: var(--dark); }
+    .about-card p { font-size: 0.8rem; color: var(--gray); margin-top: 2px; }
+
+    /* ── SKILLS ── */
+    #skills { background: white; }
+    .skills-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    .skill-card {
+      border: 1px solid #e5e7eb; border-radius: 14px;
+      padding: 28px; transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .skill-card:hover { border-color: var(--blue); box-shadow: 0 4px 20px rgba(0,112,243,0.08); }
+    .skill-card .cat {
+      font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--blue); margin-bottom: 12px;
+    }
+    .skill-card h3 { font-size: 1rem; font-weight: 600; color: var(--dark); margin-bottom: 16px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag {
+      background: var(--blue-light); color: var(--blue);
+      font-size: 0.75rem; font-weight: 500;
+      padding: 4px 10px; border-radius: 100px;
+    }
+    .tag.green { background: #d1fae5; color: #065f46; }
+    .tag.purple { background: #ede9fe; color: #5b21b6; }
+    .tag.orange { background: #fff7ed; color: #9a3412; }
+
+    /* ── CERTIFICATIONS ── */
+    #certifications { background: var(--dark); }
+    #certifications .section-title { color: white; }
+    #certifications .section-label { color: var(--accent); }
+    #certifications .section-desc { color: rgba(255,255,255,0.5); }
+    .certs-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+    .cert-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px; padding: 20px 24px;
+      display: flex; align-items: center; gap: 14px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .cert-card:hover { background: rgba(0,112,243,0.15); border-color: rgba(0,112,243,0.4); }
+    .cert-icon {
+      width: 40px; height: 40px; border-radius: 8px;
+      background: rgba(0,112,243,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; flex-shrink: 0;
+    }
+    .cert-card h4 { font-size: 0.875rem; font-weight: 500; color: white; line-height: 1.4; }
+
+    /* ── PROJECTS ── */
+    #projects { background: var(--gray-light); }
+    .projects-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+    .project-card {
+      background: white; border-radius: 16px;
+      border: 1px solid #e5e7eb;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .project-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+    .project-header {
+      padding: 24px 24px 0;
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+    }
+    .project-logo {
+      width: 46px; height: 46px; border-radius: 10px;
+      background: var(--blue-light);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; flex-shrink: 0;
+    }
+    .project-location {
+      font-size: 0.75rem; font-weight: 500; color: var(--gray);
+      background: var(--gray-light); padding: 4px 10px;
+      border-radius: 100px;
+    }
+    .project-body { padding: 16px 24px 24px; }
+    .project-body h3 { font-size: 1rem; font-weight: 600; color: var(--dark); margin-bottom: 8px; }
+    .project-body p { font-size: 0.875rem; color: var(--gray); line-height: 1.6; margin-bottom: 16px; }
+    .project-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .project-tag {
+      font-size: 0.7rem; font-weight: 500;
+      padding: 3px 10px; border-radius: 100px;
+      background: var(--blue-light); color: var(--blue);
+    }
+
+    /* ── EDUCATION ── */
+    #education { background: white; }
+    .edu-card {
+      background: linear-gradient(135deg, #0070f3, #0050b3);
+      border-radius: 20px; padding: 48px;
+      color: white; max-width: 700px;
+      display: flex; gap: 32px; align-items: flex-start;
+    }
+    .edu-icon { font-size: 3rem; flex-shrink: 0; }
+    .edu-body h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.4rem; font-weight: 700; margin-bottom: 8px;
+    }
+    .edu-body .degree { font-size: 1rem; opacity: 0.85; margin-bottom: 8px; }
+    .edu-body .years { font-size: 0.85rem; opacity: 0.6; }
+
+    /* ── CONTACT ── */
+    #contact { background: var(--gray-light); }
+    .contact-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 60px; align-items: center;
+    }
+    .contact-text h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      font-weight: 700; color: var(--dark); margin-bottom: 16px;
+    }
+    .contact-text p { color: var(--gray); font-size: 1rem; line-height: 1.7; }
+    .contact-links { display: flex; flex-direction: column; gap: 16px; }
+    .contact-link {
+      background: white; border: 1px solid #e5e7eb; border-radius: 12px;
+      padding: 18px 24px;
+      display: flex; align-items: center; gap: 14px;
+      text-decoration: none; color: var(--dark);
+      transition: border-color 0.2s, transform 0.1s;
+    }
+    .contact-link:hover { border-color: var(--blue); transform: translateX(4px); }
+    .contact-link .icon { font-size: 1.4rem; flex-shrink: 0; }
+    .contact-link .info .label { font-size: 0.75rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.05em; }
+    .contact-link .info .value { font-size: 0.95rem; font-weight: 500; margin-top: 2px; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark); color: rgba(255,255,255,0.4);
+      text-align: center; padding: 24px;
+      font-size: 0.8rem;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav ul { display: none; }
+      .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+      .hero-stats { gap: 24px; }
+      .edu-card { flex-direction: column; gap: 16px; padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="logo">Abhijith<span>.</span></a>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#certifications">Certifications</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-grid"></div>
+    <div class="hero-inner">
+      <div class="hero-badge"><span></span>Salesforce Architect</div>
+      <h1>Abhijith<br /><span class="blue">Damodaran</span></h1>
+      <p class="subtitle">10+ years designing and building scalable Salesforce solutions across Sales, Service, CPQ, Field Service, and beyond.</p>
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="num">10<span>+</span></div>
+          <div class="label">Years Experience</div>
+        </div>
+        <div class="stat">
+          <div class="num">8<span>+</span></div>
+          <div class="label">Certifications</div>
+        </div>
+        <div class="stat">
+          <div class="num">15<span>+</span></div>
+          <div class="label">Projects Delivered</div>
+        </div>
+        <div class="stat">
+          <div class="num">6<span>+</span></div>
+          <div class="label">Countries</div>
+        </div>
+      </div>
+      <div class="hero-cta">
+        <a href="#projects" class="btn-primary">View Projects →</a>
+        <a href="#contact" class="btn-outline">Get in Touch</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-text">
+          <p class="section-label">About Me</p>
+          <h2 class="section-title">Architect. Builder.<br />Problem Solver.</h2>
+          <p>With over 10 years in the Salesforce ecosystem, I specialize in designing and implementing scalable solutions across multiple Salesforce products — from Sales and Service Cloud to CPQ, Field Service, Experience Cloud, and Data Cloud.</p>
+          <p>I've led end-to-end project delivery for clients across the UAE, US, Australia, Canada, and UK — mentoring developers, designing architecture, and driving DevOps maturity through CI/CD pipelines and best practices.</p>
+          <p>My approach combines deep technical expertise with a strong understanding of business processes, ensuring the solutions I build are not just functional, but future-proof.</p>
+        </div>
+        <div class="about-cards">
+          <div class="about-card">
+            <div class="icon">🏗️</div>
+            <div>
+              <h4>Solution Architecture</h4>
+              <p>End-to-end architecture design, landscape diagrams, and scalable data models for complex implementations.</p>
+            </div>
+          </div>
+          <div class="about-card">
+            <div class="icon">🔗</div>
+            <div>
+              <h4>Integrations</h4>
+              <p>REST APIs, Mulesoft, Workato, Zapier — connecting Salesforce with ERPs, accounting systems, and custom apps.</p>
+            </div>
+          </div>
+          <div class="about-card">
+            <div class="icon">🚀</div>
+            <div>
+              <h4>DevOps & CI/CD</h4>
+              <p>Streamlining releases with Copado, Gearset, and DevOps Center, reducing deployment risk across large teams.</p>
+            </div>
+          </div>
+          <div class="about-card">
+            <div class="icon">👥</div>
+            <div>
+              <h4>Team Leadership</h4>
+              <p>Mentoring developers, conducting code reviews, and guiding cross-functional teams to technical excellence.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="container">
+      <p class="section-label">Expertise</p>
+      <h2 class="section-title">Skills & Technologies</h2>
+      <p class="section-desc">A broad and deep toolkit spanning Salesforce products, custom development, and enterprise integrations.</p>
+      <div class="skills-grid">
+        <div class="skill-card">
+          <p class="cat">Salesforce Clouds</p>
+          <h3>Core Platform Products</h3>
+          <div class="tags">
+            <span class="tag">Sales Cloud</span><span class="tag">Service Cloud</span><span class="tag">CPQ</span>
+            <span class="tag">Field Service</span><span class="tag">Experience Cloud</span>
+            <span class="tag">Financial Services Cloud</span><span class="tag">Agentforce</span><span class="tag">Data Cloud</span>
+          </div>
+        </div>
+        <div class="skill-card">
+          <p class="cat">Marketing & Commerce</p>
+          <h3>Marketing & Analytics</h3>
+          <div class="tags">
+            <span class="tag green">Marketing Cloud</span><span class="tag green">Pardot (MCAE)</span>
+            <span class="tag green">OmniStudio</span><span class="tag green">Spiff</span>
+          </div>
+        </div>
+        <div class="skill-card">
+          <p class="cat">Development</p>
+          <h3>Languages & Frameworks</h3>
+          <div class="tags">
+            <span class="tag purple">Apex</span><span class="tag purple">LWC</span>
+            <span class="tag purple">Aura Components</span><span class="tag purple">Visualforce</span>
+            <span class="tag purple">JavaScript</span><span class="tag purple">REST APIs</span>
+          </div>
+        </div>
+        <div class="skill-card">
+          <p class="cat">Integrations</p>
+          <h3>Integration Tools</h3>
+          <div class="tags">
+            <span class="tag orange">Mulesoft</span><span class="tag orange">Workato</span>
+            <span class="tag orange">Zapier</span><span class="tag orange">Conga</span>
+            <span class="tag orange">DocuSign</span>
+          </div>
+        </div>
+        <div class="skill-card">
+          <p class="cat">DevOps</p>
+          <h3>CI/CD & Deployment</h3>
+          <div class="tags">
+            <span class="tag">Copado</span><span class="tag">Gearset</span><span class="tag">DevOps Center</span>
+          </div>
+        </div>
+        <div class="skill-card">
+          <p class="cat">Configuration</p>
+          <h3>Admin & Config</h3>
+          <div class="tags">
+            <span class="tag green">Flows</span><span class="tag green">Approval Processes</span>
+            <span class="tag green">Sharing & Security</span><span class="tag green">Territory Management</span>
+            <span class="tag green">Data Migration</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CERTIFICATIONS -->
+  <section id="certifications">
+    <div class="container">
+      <p class="section-label">Credentials</p>
+      <h2 class="section-title">Salesforce Certifications</h2>
+      <p class="section-desc">8 active Salesforce certifications spanning architecture, development, and specialised cloud products.</p>
+      <div class="certs-grid">
+        <div class="cert-card"><div class="cert-icon">⚙️</div><h4>Salesforce Certified CPQ Specialist</h4></div>
+        <div class="cert-card"><div class="cert-icon">🤖</div><h4>Salesforce Certified Agentforce Specialist</h4></div>
+        <div class="cert-card"><div class="cert-icon">☁️</div><h4>Salesforce Certified Data Cloud Consultant</h4></div>
+        <div class="cert-card"><div class="cert-icon">🔷</div><h4>Salesforce Certified OmniStudio Consultant</h4></div>
+        <div class="cert-card"><div class="cert-icon">💼</div><h4>Financial Services Cloud Accredited Professional</h4></div>
+        <div class="cert-card"><div class="cert-icon">👨‍💻</div><h4>Salesforce Certified Platform Developer I</h4></div>
+        <div class="cert-card"><div class="cert-icon">🏗️</div><h4>Salesforce Certified Platform App Builder</h4></div>
+        <div class="cert-card"><div class="cert-icon">🛡️</div><h4>Salesforce Certified Administrator</h4></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="container">
+      <p class="section-label">Work</p>
+      <h2 class="section-title">Recent Projects</h2>
+      <p class="section-desc">A selection of complex, high-impact Salesforce implementations across industries and geographies.</p>
+      <div class="projects-grid">
+
+        <div class="project-card">
+          <div class="project-header">
+            <div class="project-logo">🏢</div>
+            <span class="project-location">UAE</span>
+          </div>
+          <div class="project-body">
+            <h3>Aldar — Sales, Service & Experience Cloud</h3>
+            <p>Architected a full Salesforce implementation for a UAE real estate enterprise including Yardi ERP integration, REST APIs for mobile/web apps, Experience Cloud contractor portal, and a custom Lead-to-Lease process via Mulesoft.</p>
+            <div class="project-tags">
+              <span class="project-tag">Sales Cloud</span><span class="project-tag">Service Cloud</span>
+              <span class="project-tag">Experience Cloud</span><span class="project-tag">Mulesoft</span><span class="project-tag">LWC</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-header">
+            <div class="project-logo">📊</div>
+            <span class="project-location">Australia</span>
+          </div>
+          <div class="project-body">
+            <h3>CreditorWatch — CPQ & Spiff Implementation</h3>
+            <p>Implemented Salesforce CPQ for an Australian credit management company including product bundles, subscription products, price rules, and Docusign e-signature. Also integrated Spiff with Xero via Workato for commission automation.</p>
+            <div class="project-tags">
+              <span class="project-tag">CPQ</span><span class="project-tag">Spiff</span>
+              <span class="project-tag">Conga</span><span class="project-tag">DocuSign</span><span class="project-tag">Workato</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-header">
+            <div class="project-logo">🔌</div>
+            <span class="project-location">UK</span>
+          </div>
+          <div class="project-body">
+            <h3>Connect IT — Field Service & Custom Gantt</h3>
+            <p>Led a team of 5 to implement Sales, Service, and Field Service for a US energy provider. Also built a fully-featured custom Gantt chart LWC app for scheduling tasks with project and resource views.</p>
+            <div class="project-tags">
+              <span class="project-tag">Field Service</span><span class="project-tag">LWC</span>
+              <span class="project-tag">Partner Portal</span><span class="project-tag">Service Cloud</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-header">
+            <div class="project-logo">🏥</div>
+            <span class="project-location">Canada</span>
+          </div>
+          <div class="project-body">
+            <h3>Intellijoint Surgical — Org Migration & Territory Management</h3>
+            <p>Migrated metadata and data to a new Salesforce org for a surgical device manufacturer. Redesigned Territory Management, identified gaps, and rebuilt data models and automations to reduce license cost and improve efficiency.</p>
+            <div class="project-tags">
+              <span class="project-tag">Org Migration</span><span class="project-tag">Territory Management</span>
+              <span class="project-tag">Data Migration</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-header">
+            <div class="project-logo">💊</div>
+            <span class="project-location">Canada</span>
+          </div>
+          <div class="project-body">
+            <h3>Apotex — Customer Order Portal</h3>
+            <p>Built an Experience Cloud customer portal for a Canadian pharmaceutical company enabling online product search and direct order placement using Lightning Web Components.</p>
+            <div class="project-tags">
+              <span class="project-tag">Experience Cloud</span><span class="project-tag">LWC</span><span class="project-tag">Communities</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-header">
+            <div class="project-logo">📦</div>
+            <span class="project-location">US</span>
+          </div>
+          <div class="project-body">
+            <h3>PeopleMetrics — Survey Connector Managed Package</h3>
+            <p>Designed and developed a managed Salesforce package syncing customer surveys and responses with any Salesforce object. Used LWC for configuration UI and REST API callouts with batch sync jobs.</p>
+            <div class="project-tags">
+              <span class="project-tag">Managed Package</span><span class="project-tag">LWC</span>
+              <span class="project-tag">REST API</span><span class="project-tag">Batch Apex</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-header">
+            <div class="project-logo">💊</div>
+            <span class="project-location">US</span>
+          </div>
+          <div class="project-body">
+            <h3>XSOLIS — CPQ Implementation</h3>
+            <p>Implemented Salesforce CPQ for a US Healthcare analytics provider, configuring product bundles, subscription products, pricing and product rules, and custom approval workflows.</p>
+            <div class="project-tags">
+              <span class="project-tag">CPQ</span><span class="project-tag">Healthcare</span><span class="project-tag">Approvals</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-header">
+            <div class="project-logo">🚚</div>
+            <span class="project-location">US</span>
+          </div>
+          <div class="project-body">
+            <h3>Evans Delivery — DevOps Implementation</h3>
+            <p>Established full DevOps and CI/CD processes for a team of 8 developers and testers, and provided technical design guidance for their Service Cloud implementation and integrations.</p>
+            <div class="project-tags">
+              <span class="project-tag">DevOps</span><span class="project-tag">CI/CD</span><span class="project-tag">Service Cloud</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section id="education">
+    <div class="container">
+      <p class="section-label">Education</p>
+      <h2 class="section-title">Academic Background</h2>
+      <p class="section-desc" style="margin-bottom:40px;">Engineering foundation underpinning a decade of technical problem-solving.</p>
+      <div class="edu-card">
+        <div class="edu-icon">🎓</div>
+        <div class="edu-body">
+          <h3>Cochin University of Science and Technology</h3>
+          <p class="degree">Bachelor of Technology — Electrical and Electronics Engineering</p>
+          <p class="years">Cochin, Kerala, India &nbsp;·&nbsp; Batch 2012 – 2016</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="container">
+      <div class="contact-grid">
+        <div class="contact-text">
+          <p class="section-label">Get In Touch</p>
+          <h2>Let's work<br />together.</h2>
+          <p style="margin-top:16px;">Whether you need a Salesforce architect, a technical lead for a complex implementation, or expert advice on your existing org — I'd love to hear from you.</p>
+        </div>
+        <div class="contact-links">
+          <a href="mailto:damodaran.abhijith@gmail.com" class="contact-link">
+            <span class="icon">✉️</span>
+            <div class="info">
+              <div class="label">Email</div>
+              <div class="value">damodaran.abhijith@gmail.com</div>
+            </div>
+          </a>
+          <a href="https://linkedin.com/in/abhijithd" class="contact-link" target="_blank">
+            <span class="icon">💼</span>
+            <div class="info">
+              <div class="label">LinkedIn</div>
+              <div class="value">linkedin.com/in/abhijithd</div>
+            </div>
+          </a>
+          <a href="#" class="contact-link">
+            <span class="icon">📍</span>
+            <div class="info">
+              <div class="label">Location</div>
+              <div class="value">Kerala, India</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 Abhijith Damodaran · Salesforce Architect</p>
+  </footer>
+
+</body>
+</html>
